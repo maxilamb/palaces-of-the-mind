@@ -2,44 +2,27 @@
 
 ## Images
 
-`docker image my_command`
+`docker image [COMMAND]`
 
 Команды для управления образами:
 
 - build — сборка образа.
 - push — отправка образа в удалённый реестр.
+- pull — скачивание образа с удалённого реестра.
 - ls — вывод списка образов.
 - history — вывод сведений о слоях образа.
 - inspect — вывод подробной информации об образе, в том числе — сведений о слоях.
 - rm — удаление образа.
 
-Добавление image
-
-```bash
-
-docker pull image_name (for example ngnix)
-
-```
-
 Посмотреть список всех images с помощью команды:
 
 ```bash
-
 docker images
-
-```
-
-Удаление image
-
-```bash
-
-docker image rm id_image_or_first_three_chars_name
-
 ```
 
 ## Container
 
-`docker container my_command`
+`docker container [COMMAND]`
 
 Команды для управления контейнерами:
 
@@ -174,6 +157,4 @@ EXPOSE 8000
 VOLUME /my_volume
 
 ```
-
-## Docker-Compose 
 
