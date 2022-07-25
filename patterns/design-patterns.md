@@ -1,82 +1,159 @@
-#Паттерны проектирования
+# Паттерны проектирования
 
-*  **Порождающие** паттерны беспокоятся о гибком создании объектов без внесения в программу лишних зависимостей.
-  *  **Фабричный метод** — определяет общий интерфейс для создания объектов в суперклассе, позволяя подклассам изменять тип создаваемых объектов.
-  *  **Абстрактная фабрика** — позволяет создавать семейства связанных объектов, не привязываясь к конкретным классам создаваемых объектов.
-  *  **Прототип** — позволяет копировать объекты, не вдаваясь в подробности их реализации.
-  *  **Строитель** — позволяет создавать сложные объекты пошагово, даёт возможность использовать один и тот же код строительства для получения разных представлений объектов.
-  *  **Одиночка** — арантирует, что у класса есть только один экземпляр, и предоставляет к нему глобальную точку доступа.
+Паттерн проектирования — это часто встречающееся решение определённой проблемы при проектировании архитектуры программ.
 
-*  **Структурные** паттерны показывают различные способы построения связей между объектами.
-*  **Поведенческие** паттерны заботятся об эффективной коммуникации между объектами.
+* **Порождающие** паттерны беспокоятся о гибком создании объектов без внесения в программу лишних зависимостей.
+* **Структурные** паттерны показывают различные способы построения связей между объектами.
+* **Поведенческие** паттерны заботятся об эффективной коммуникации между объектами.
 
-#### Builder
+## Пораждающий паттерн
 
-`Позволяет создавать различные варианты объекта, избегая загрязнения конструктора. Полезно, когда может быть несколько вариантов объекта. Или когда есть много шагов, связанных с созданием объекта.`
+### Фабричный метод
 
-> OOP
+Фабричный метод — определяет общий интерфейс для создания объектов в суперклассе, позволяя подклассам изменять тип создаваемых объектов.
 
 ```js
 
-class DataTransform {
-  constructor() {
-    this.data = "";
-  }
+const car = (price, color) => ({
+    price,
+    color
+});
 
-  toCSV() {
-    this.data = "csv";
-    return this;
-  }
+const ship = (price, color) => ({
+    price,
+    color,
+    weight: '3m',
+    height: '2m'
+});
 
-  toJSON() {
-    this.data = "json";
-    return this;
-  }
+// factory method
+const factoryCar = (type) => {
+    const carMap = {
+        bmw: car(1000, 'red'),
+        audi: car(1000, 'red'),
+    }
 
-  toBinary() {
-    this.data = "binary";
-    return this;
-  }
-
-  build() {
-    return this.data;
-  }
+    return carMap[type];
 }
 
-const transformer = new DataTransform().toCSV().toBinary().build();
+// factory method
+const factoryShip = (type) => {
+    const shipMap = {
+        shipe: ship(10000, 'green'),
+    }
 
-console.log("transformer", transformer);
+    return carMap[type];
+}
 
 ```
 
-> FP
+### Абстрактная фабрика
+
+Абстрактная фабрика —  позволяет создавать семейства связанных объектов, не привязываясь к конкретным классам создаваемых объектов.
+
+```js 
+
+const shop = (transportType) => {
+    const transportFactoryMap = {
+        car: factoryCar,
+        ship: factoryShip
+    }
+
+    return transportFactoryMap[type];
+}
+
+const transport = shop('car');
+const transport2 = shop('ship');
+
+
+const bmw = transport("bmw");
+const shipe = transport2("ship");
+
+```
+
+### Строитель (Builder)
+
+Строитель —  позволяет создавать сложные объекты пошагово. Строитель даёт возможность использовать один и тот же код строительства для получения разных представлений объектов.
 
 ```js
-function builder(counter = 0) {
-  this.count = counter;
 
-  this.increment = () => {
-    this.count += 1;
+function CarBuilder() {
+  let car = {};
+
+  this.addDoor = (value) => {
+    car = {
+      ...car,
+      door: value
+    };
     return this;
   };
 
-  this.decrement = () => {
-    this.count -= 1;
-    return this;
-  };
-
-  this.reset = () => {
-    this.count = 0;
+  this.addWheel = (value) => {
+    car = {
+      ...car,
+      wheel: value
+    };
     return this;
   };
 
   this.build = () => {
-    return this.count;
+    return car;
   };
 }
 
-const count = new builder().increment().increment().increment().build();
-
-console.log(count);
+const car = new CarBuilder().addDoor(2).addWheel(4).build()
 
 ```
+
+
+### Прототип (Клон, Prototype)
+
+Прототип — позволяет копировать объекты, не вдаваясь в подробности их реализации.
+
+```js
+
+const wheelsFactory = (type) => {
+  const wheels = (country) => ({
+    country
+  });
+
+  const wheelsMap = {
+    simply: wheels("china"),
+    medium: wheels("germany")
+  };
+
+  return wheelsMap[type];
+};
+
+function CarPrototype(type, price, color, doors) {
+  this.type = type;
+  this.price = price;
+  this.color = color;
+  this.doors = doors;
+  this.wheels = wheelsFactory(price > 1000 ? "simply" : "medium");
+
+  this.print = () => {
+    return this;
+  };
+
+  this.clone = () => {
+    const clone = Object.create(this);
+    clone.wheels = {
+      ...this.wheels,
+      prototype: {
+        ...this
+      }
+    };
+    return clone;
+  };
+}
+
+const car1 = new CarPrototype("sport", 10000, "red", 2);
+
+console.log(car1.clone());
+
+```
+
+### Одиночка (Singleton)
+
+Одиночка гарантирует, что у класса есть только один экземпляр, и предоставляет к нему глобальную точку доступа.
