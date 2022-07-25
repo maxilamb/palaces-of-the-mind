@@ -157,3 +157,39 @@ console.log(car1.clone());
 ### Одиночка (Singleton)
 
 Одиночка гарантирует, что у класса есть только один экземпляр, и предоставляет к нему глобальную точку доступа.
+
+```js
+
+let instance = null;
+
+class SingletonCounter {
+  constructor() {
+    if (!instance) {
+      this.counter = 0;
+      instance = this;
+    }
+
+    return instance;
+  }
+
+  increment() {
+    this.counter++;
+  }
+
+  decrement() {
+    this.counter++;
+  }
+}
+
+const counter1 = new SingletonCounter();
+counter1.decrement();
+counter1.decrement();
+counter1.decrement();
+
+console.log(counter1.counter);
+
+const counter2 = new SingletonCounter();
+
+console.log(counter2.counter);
+
+```
