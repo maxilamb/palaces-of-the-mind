@@ -6,7 +6,7 @@
 * **Структурные** паттерны показывают различные способы построения связей между объектами.
 * **Поведенческие** паттерны заботятся об эффективной коммуникации между объектами.
 
-## Пораждающий паттерн
+## Пораждающие паттерны
 
 ### Фабричный метод
 
@@ -193,3 +193,122 @@ const counter2 = new SingletonCounter();
 console.log(counter2.counter);
 
 ```
+
+
+## Структурные паттерны
+
+### Адаптер (Adapter)
+
+Адаптер — позволяет подружить несовместимые объекты.
+
+```js
+
+class EngineNode {
+  run(payload) {
+    console.log(`[NODE][RUN] ---> ${payload}`);
+  }
+}
+
+class EngineDeno {
+  constructor() {
+    this.code = "";
+  }
+
+  transpile(payload) {
+    this.code = payload;
+  }
+
+  run() {
+    console.log(`[DENO][RUN] ---> ${this.code}`);
+  }
+}
+
+class EngineDenoAdapter {
+  constructor(EngineDeno) {
+    this.deno = new EngineDeno();
+  }
+
+  run(payload) {
+    this.deno.transpile(payload);
+    this.deno.run();
+  }
+}
+
+const node = new EngineNode().run("hello world");
+
+const deno = new EngineDenoAdapter(EngineDeno).run("hello world");
+
+```
+
+### Мост (Bridge)
+
+Мост — разделяет бизнес-логику или большой класс на несколько отдельных иерархий, которые потом можно развивать отдельно друг от друга.
+
+### Компоновщик (Composite)
+
+Компоновщик — позволяет сгруппировать множество объектов в древовидную структуру, а затем работать с ней так, как будто это единичный объект.
+
+### Декоратор (Decorator)
+
+Декоратор позволяет динамически добавлять объектам новую функциональность, оборачивая их в полезные «обёртки».
+
+```js
+class WebComponet {
+  static render() {
+    return "<h1>Hello world</h1>";
+  }
+}
+
+// Class decorator
+
+class Logger {
+  static print(component) {
+    console.log("[CLASS][LOGGER] render");
+
+    return component;
+  }
+}
+
+// Function decorator
+
+const logger = (component) => {
+  console.log("[FUNCTION][LOGGER] render");
+
+  return component;
+};
+
+Logger.print(WebComponet);
+
+logger(WebComponet);
+
+```
+
+### Фасад
+
+### Легковес
+
+### Заместитель
+
+## Поведенческие паттерны 
+
+### Цепочка обязанностей
+
+### Команда
+
+### Итератор
+
+### Посредник
+
+### Снимок
+
+### Наблюдатель
+
+### Состояние
+
+### Стратегия
+
+### Шаблонный метод
+
+### Посетитель (Visitor)
+
+Посетитель — позволяет добавлять в программу новые операции, не изменяя классы объектов, над которыми эти операции могут выполняться.
